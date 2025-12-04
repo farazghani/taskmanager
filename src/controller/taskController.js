@@ -37,15 +37,62 @@ export const createTask = async (req, res) => {
   }
 };
 
+
 // GET all tasks of logged-in user
 export const getTasks = async (req, res) => {
   try {
-    const tasks = await Task.find({ userId: req.userId }).sort({ createdAt: -1 });
-    res.json({ success: true, tasks });
+    // Query params
+    const search = req.query.search || "";
+    const status = req.query.status || "";
+    const priority = req.query.priority || "";
+    const sortBy = req.query.sortBy || "createdAt"; // createdAt, dueDate, priority
+    const order = req.query.order === "asc" ? 1 : -1;
+
+    // Pagination params
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    // Base filter
+    const filter = {
+      userId: req.userId,
+      $or: [
+        { title: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } }
+      ]
+    };
+
+    if (status) filter.status = status;
+    if (priority) filter.priority = priority;
+
+    // Sorting logic
+    const sortOptions = {};
+    sortOptions[sortBy] = order;
+
+    // Fetch tasks
+    const tasks = await Task.find(filter)
+      .sort(sortOptions)
+      .skip(skip)
+      .limit(limit);
+
+    // Count total tasks for pagination info
+    const totalTasks = await Task.countDocuments(filter);
+
+    return res.json({
+      success: true,
+      page,
+      limit,
+      totalTasks,
+      totalPages: Math.ceil(totalTasks / limit),
+      tasks
+    });
+
   } catch (err) {
-    res.status(500).json({ msg: "Server error" });
+    console.error("Get Tasks Error:", err);
+    return res.status(500).json({ msg: "Server error" });
   }
 };
+
 
 // UPDATE task
 export const updateTask = async (req, res) => {
@@ -55,7 +102,7 @@ export const updateTask = async (req, res) => {
       req.body,
       { new: true }
     );
-
+    console.log(task)
     if (!task) return res.status(404).json({ msg: "Task not found" });
 
     res.json({ success: true, task });
