@@ -7,8 +7,11 @@ import taskRoutes from "./routes/taskRoutes.js";
 import cors from "cors";
 
 
-dotenv.config();
-connectDB();
+if (process.env.NODE_ENV === 'test') {
+  dotenv.config({ path: '.env.test' });
+} else {
+  dotenv.config(); // loads .env by default
+}
 
 
 const app = express();
@@ -24,4 +27,10 @@ app.use(express.json());
 app.use("/api/user" , userRoutes);
 app.use("/api/task" , taskRoutes);
 
-app.listen(8080 , ()=> console.log("server running on port 8080"));
+
+export default app;
+
+if (process.env.NODE_ENV !== "test") {
+  connectDB();
+  app.listen(8080, () => console.log("server running on port 8080"));
+}
