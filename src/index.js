@@ -17,7 +17,7 @@ if (process.env.NODE_ENV === 'test') {
 const app = express();
 
 app.use(cors({
-  origin: "http://localhost:3000", // or your Vercel domain
+  origin: "taskmanager-l32aoje24-farazs-projects-5e7e4223.vercel.app", // or your Vercel domain
   credentials: true,
 }));
 
