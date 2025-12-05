@@ -26,6 +26,9 @@ app.use(cors({
 
 app.use(express.json());
 
+app.get("/ping", (req, res) => {
+  res.status(200).send("OK");
+});
 
 app.use("/api/user" , userRoutes);
 app.use("/api/task" , taskRoutes);
