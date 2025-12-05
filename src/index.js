@@ -17,7 +17,10 @@ if (process.env.NODE_ENV === 'test') {
 const app = express();
 
 app.use(cors({
-  origin: "taskmanager-fe-six.vercel.app", // or your Vercel domain
+  origin: [
+    "http://localhost:3000",
+    "https://taskmanager-fe-six.vercel.app"
+  ],
   credentials: true,
 }));
 
