@@ -30,7 +30,9 @@ app.use("/api/task" , taskRoutes);
 
 export default app;
 
+const PORT = process.env.PORT || 8080;
+
 if (process.env.NODE_ENV !== "test") {
   connectDB();
-  app.listen(8080, () => console.log("server running on port 8080"));
+  app.listen(PORT, () => console.log("server running on port 8080"));
 }
