@@ -1,10 +1,10 @@
-# 🧠 Task Manager Backend API  
+#  Task Manager Backend API  
 A Node.js + Express + MongoDB backend for a Task Management application.  
 Provides secure user authentication, task CRUD operations, and role-based access.
 
 ---
 
-## 🚀 Tech Stack
+##  Tech Stack
 
 - **Node.js**
 - **Express.js**
